@@ -26,7 +26,6 @@ public class App {
 		
         Scanner scanner = new Scanner(System.in);
         ScoreBoard scoreBoard = null;
-        deleteParentNodes();
         while (true) {
             String input = scanner.nextLine();
             //System.out.println("INPUT : "+input);
@@ -38,7 +37,7 @@ public class App {
 			
             String connectionString = commands[1];
             if (commands[0].toLowerCase().equals("watcher")) {
-                
+                deleteParentNodes();
                 int listSize = 0;
                 try {
                     listSize = Integer.parseInt(commands[2]);
@@ -117,12 +116,14 @@ public class App {
         ZooKeeper zooKeeper = ZooKeeperConnect.connectZooKeeperServer("localhost:2181");
         try {
             List<String> childrenList = zooKeeper.getChildren("/Players", false);
+            System.out.print(childrenList);
             for(String childPath: childrenList){
-                deleteNode(childPath, zooKeeper);
+                deleteNode("/Players/"+childPath, zooKeeper);
             }
             List<String> children2List = zooKeeper.getChildren("/RecentScores", false);
+            System.out.print(children2List);
             for(String childPath: children2List){
-                deleteNode(childPath, zooKeeper);
+                deleteNode("/RecentScores/"+childPath, zooKeeper);
             }
             deleteNode("/Players", zooKeeper);
             deleteNode("/RecentScores", zooKeeper);
