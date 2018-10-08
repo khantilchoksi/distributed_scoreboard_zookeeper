@@ -71,10 +71,15 @@ public class App {
                 }else if (commands.length == 6) {
                     // player 127.0.0.1:2181 Thor 15 10 140
                     //player name count delay score
-                    startPostingScoreBoard(connectionString,commands[2],    //Player Name
+                    if(Integer.parseInt(commands[3]) < 0 || Integer.parseInt(commands[4]) < 0
+                     || Integer.parseInt(commands[5]) < 0){
+                        showArgumentsError();
+                    }else{
+                        startPostingScoreBoard(connectionString,commands[2],    //Player Name
                             Integer.parseInt(commands[3]),  // Count
                             Float.parseFloat(commands[5]),  // Score
                             Float.parseFloat(commands[4])); //Delay
+                    }      
                 }else{
                     showArgumentsError();
                 }
@@ -116,12 +121,10 @@ public class App {
         ZooKeeper zooKeeper = ZooKeeperConnect.connectZooKeeperServer("localhost:2181");
         try {
             List<String> childrenList = zooKeeper.getChildren("/Players", false);
-            System.out.print(childrenList);
             for(String childPath: childrenList){
                 deleteNode("/Players/"+childPath, zooKeeper);
             }
             List<String> children2List = zooKeeper.getChildren("/RecentScores", false);
-            System.out.print(children2List);
             for(String childPath: children2List){
                 deleteNode("/RecentScores/"+childPath, zooKeeper);
             }
@@ -129,7 +132,7 @@ public class App {
             deleteNode("/RecentScores", zooKeeper);
         } catch (KeeperException | InterruptedException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
